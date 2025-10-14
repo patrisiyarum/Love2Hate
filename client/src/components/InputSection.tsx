@@ -1,22 +1,30 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Book, Film } from "lucide-react";
+
+export type Category = "books" | "movies";
 
 interface InputSectionProps {
-  onSubmit: (dislikes: string) => void;
+  onSubmit: (dislikes: string, category: Category) => void;
   isLoading?: boolean;
 }
 
 export default function InputSection({ onSubmit, isLoading }: InputSectionProps) {
   const [input, setInput] = useState("");
+  const [category, setCategory] = useState<Category>("books");
   const charCount = input.length;
   const maxChars = 500;
 
   const handleSubmit = () => {
     if (input.trim()) {
-      onSubmit(input);
+      onSubmit(input, category);
     }
+  };
+
+  const placeholders = {
+    books: "Type books you don't like... (e.g., 'slow-paced novels, dark fantasy, romance')",
+    movies: "Type movies you don't like... (e.g., 'horror films, long documentaries, superhero movies')"
   };
 
   return (
@@ -26,14 +34,35 @@ export default function InputSection({ onSubmit, isLoading }: InputSectionProps)
           Reverse Recommendations
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Tell us what you don't like, and we'll suggest things you might love instead
+          Tell us what books or movies you don't like, and we'll suggest ones you'll love
         </p>
       </div>
 
       <div className="space-y-4">
+        <div className="flex justify-center gap-2">
+          <Button
+            variant={category === "books" ? "default" : "outline"}
+            onClick={() => setCategory("books")}
+            className="gap-2"
+            data-testid="button-category-books"
+          >
+            <Book className="h-4 w-4" />
+            Books
+          </Button>
+          <Button
+            variant={category === "movies" ? "default" : "outline"}
+            onClick={() => setCategory("movies")}
+            className="gap-2"
+            data-testid="button-category-movies"
+          >
+            <Film className="h-4 w-4" />
+            Movies
+          </Button>
+        </div>
+
         <div className="relative">
           <Textarea
-            placeholder="Type what you don't like... (e.g., 'spicy food, horror movies, crowded places')"
+            placeholder={placeholders[category]}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className="min-h-32 resize-none text-base rounded-xl"
@@ -52,7 +81,7 @@ export default function InputSection({ onSubmit, isLoading }: InputSectionProps)
           data-testid="button-submit"
         >
           <Sparkles className="h-5 w-5 mr-2" />
-          {isLoading ? "Finding suggestions..." : "Find What I'd Love Instead"}
+          {isLoading ? "Finding suggestions..." : `Find ${category === "books" ? "Books" : "Movies"} I'd Love`}
         </Button>
       </div>
     </div>
