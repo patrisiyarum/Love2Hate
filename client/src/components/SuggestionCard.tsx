@@ -15,7 +15,7 @@ interface SuggestionCardProps {
 
 export default function SuggestionCard({ suggestion, index }: SuggestionCardProps) {
   return (
-    <Card className="p-6 rounded-xl hover:shadow-md transition-shadow" data-testid={`card-suggestion-${index}`}>
+    <Card className="p-6 rounded-xl hover-elevate" data-testid={`card-suggestion-${index}`}>
       <div className="space-y-4">
         <div className="flex items-start gap-3">
           {suggestion.icon && (
@@ -25,7 +25,7 @@ export default function SuggestionCard({ suggestion, index }: SuggestionCardProp
             <h3 className="text-lg font-semibold font-[family-name:var(--font-display)] mb-1" data-testid={`text-suggestion-title-${index}`}>
               {suggestion.title}
             </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
+            <p className="text-sm text-muted-foreground">
               {suggestion.description}
             </p>
           </div>
