@@ -1,18 +1,28 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+export const categorySchema = z.enum(["books", "movies"]);
+export type Category = z.infer<typeof categorySchema>;
+
+export const suggestionSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  reasons: z.array(z.string()),
+  icon: z.string().optional(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export type Suggestion = z.infer<typeof suggestionSchema>;
+
+export const recommendationRequestSchema = z.object({
+  dislikes: z.string().min(1, "Please enter what you don't like"),
+  category: categorySchema,
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type RecommendationRequest = z.infer<typeof recommendationRequestSchema>;
+
+export const recommendationResponseSchema = z.object({
+  dislikes: z.array(z.string()),
+  suggestions: z.array(suggestionSchema),
+  category: categorySchema,
+});
+
+export type RecommendationResponse = z.infer<typeof recommendationResponseSchema>;
