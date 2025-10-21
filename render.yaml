@@ -1,0 +1,24 @@
+# render.yaml
+# This file tells Render how to build and run your application.
+# For more info, see: https://render.com/docs/blueprint-spec
+
+services:
+  # A web service for your Express server and React frontend
+  - type: web
+    name: reverse-recommendations
+    # Use the Node.js runtime
+    runtime: node
+    # The commands to run to build your app
+    buildCommand: "npm install && npm run build"
+    # The command to run to start your app
+    startCommand: "npm run start"
+    # Specify the Node.js version to use, matching your package.json
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NODE_ENV
+        value: production
+      # This is a secret key. You will need to add its value in
+      # the Render dashboard under Environment.
+      - key: OPENAI_API_KEY
+        sync: false
